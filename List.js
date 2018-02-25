@@ -13,7 +13,6 @@ class List {
   constructor() {
     this.last = null;
     this.first = null;
-
   }
 
   push(data) {
@@ -41,18 +40,14 @@ class List {
     }
   }
 
-  lenght() {
-    let l = 0;
-    let a = {};
-    if (this.last !== null) {
-      a = this.last;
-      l++;
-      while (a.prev !== null) {
-        a = a.prev;
-        l++;
-      }
+  length() {
+    let len = 0;
+    let element = this.last;
+    while (element) {
+      element = element.prev;
+      len++;
     }
-    return l;
+    return len;
   }
 
   [Symbol.iterator]() {
@@ -78,21 +73,21 @@ class List {
   insert(index, data) {
     const ins = new Node(this, data);
     let element = this.last;
-    function  check(prev, ins) {
+    const check = (prev, ins) => {
       if (!prev) {
         this.first = ins;
       } else {
         prev.next = ins;
         ins.prev = prev;
       }
-    }
-    if (index - 1 === this.lenght()) {
+    };
+    if (index - 1 === this.length()) {
       const prev = element;
       check(prev, ins, this.first);
       this.last = ins;
       return ins;
     } else {
-      for (let i = 0; i < this.lenght() - index; i++) {
+      for (let i = 0; i < this.length() - index; i++) {
         element = element.prev;
       }
       const prev = element.prev;
@@ -101,21 +96,19 @@ class List {
       ins.next = element;
       return element;
     }
-
   }
 
   delete(index) {
-    let i = 0;
     let element = this.last;
-    for (i; i < this.lenght() - index; i++) {
+    let i = 0;
+    for (i; i < this.length() - index; i++) {
       element = element.prev;
     }
     const prev = element.prev;
     const next = element.next;
     if (prev) prev.next = next;
     if (next) next.prev = prev;
-    if (index === this.lenght()) {
-
+    if (index === this.length()) {
       this.last = this.last.prev;
     }
     if (index === 1) this.first = this.first.next;
@@ -131,6 +124,7 @@ class List {
     }
     return newlist;
   }
+
   tostring() {
     const next = '  ↓', prev = '↑  ';
     let tab = '';
@@ -158,7 +152,6 @@ list.pop();
 list.delete(1);
 const list1 = list.clone();
 console.dir(list1, { depth: 10 });
-
 
 // for (const element of list) {
 //   console.log(element);

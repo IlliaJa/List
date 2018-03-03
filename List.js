@@ -64,16 +64,16 @@ class List {
   }
 
   insert(index, data) {
-    if(index > this.length || index <= 1){
-      throw new Error('Input correct index or use push/pop/shift/unshift')
+    if (index > this.length || index <= 1) {
+      throw new Error('Input correct index or use push/pop/shift/unshift');
     }
     const node = new Node(this, data);
     let element = this.first;
-    for(let i = 0; i < index -2; i++){
-      element = element.next
+    for (let i = 0; i < index - 2; i++) {
+      element = element.next;
     }
-    let prev = element;
-    let next = prev.next;
+    const prev = element;
+    const next = prev.next;
     node.next = next;
     node.prev = prev;
     prev.next = node;
@@ -82,7 +82,7 @@ class List {
   }
 
   delete(index) {
-    let element = this.first;
+    const element = this.first;
     const prev = element.prev;
     const next = element.next;
     if (prev) prev.next = next;
@@ -97,7 +97,7 @@ class List {
   }
 
   shift() {
-     if (this.first !== this.last) {
+    if (this.first !== this.last) {
       const next = this.first.next;
       this.first = this.first.next;
       next.prev = null;
@@ -109,7 +109,7 @@ class List {
   }
 
   unshift(data) {
-     const element = new Node(this, data);
+    const element = new Node(this, data);
     if (this.first) {
       const next = this.first;
       element.next = next;
@@ -144,9 +144,9 @@ class List {
   }
 }
 
-class CycleList extends List{
-  
-  do(){
+class CycleList extends List {
+
+  do() {
     this.last.next = this.first;
     this.first.prev = this.last;
     return this.last;
@@ -159,11 +159,11 @@ class CycleList extends List{
       rabbit = rabbit.next;
       rabbit = rabbit.next;
       turtle = turtle.next;
-      len++;      
-    } while(rabbit !== turtle);
+      len++;
+    } while (rabbit !== turtle);
     return len;
   }
-};
+}
 
 
 // Usage
@@ -196,7 +196,7 @@ cyclelist.push(obj2);
 cyclelist.push(obj3);
 
 // cyclelist.do();
-console.dir(cyclelist, {depth: 4});
+console.dir(cyclelist, { depth: 4 });
 // for (const element of cyclelist) {
 //   console.log(element);
 // }

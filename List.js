@@ -13,7 +13,7 @@ class List {
   constructor() {
     this.last = null;
     this.first = null;
-
+    this.length = 0;
   }
 
   push(data) {
@@ -27,6 +27,7 @@ class List {
       this.last = element;
       this.first = element;
     }
+    this.length = this.length + 1;
     return element;
   }
 
@@ -39,20 +40,7 @@ class List {
       this.last = null;
       this.first = null;
     }
-  }
-
-  lenght() {
-    let l = 0;
-    let a = {};
-    if (this.last !== null) {
-      a = this.last;
-      l++;
-      while (a.prev !== null) {
-        a = a.prev;
-        l++;
-      }
-    }
-    return l;
+    this.length = this.length - 1;
   }
 
   [Symbol.iterator]() {
@@ -76,49 +64,62 @@ class List {
   }
 
   insert(index, data) {
-    const ins = new Node(this, data);
-    let element = this.last;
-    function  check(prev, ins) {
-      if (!prev) {
-        this.first = ins;
-      } else {
-        prev.next = ins;
-        ins.prev = prev;
-      }
+    if(index > this.length || index <= 1){
+      throw new Error('Input correct index or use push/pop/shift/unshift')
     }
-    if (index - 1 === this.lenght()) {
-      const prev = element;
-      check(prev, ins, this.first);
-      this.last = ins;
-      return ins;
-    } else {
-      for (let i = 0; i < this.lenght() - index; i++) {
-        element = element.prev;
-      }
-      const prev = element.prev;
-      check(prev, ins, this.first);
-      element.prev = ins;
-      ins.next = element;
-      return element;
+    const node = new Node(this, data);
+    let element = this.first;
+    for(let i = 0; i < index -2; i++){
+      element = element.next
     }
-
+    let prev = element;
+    let next = prev.next;
+    node.next = next;
+    node.prev = prev;
+    prev.next = node;
+    next.prev = node;
+    return node;
   }
 
   delete(index) {
-    let i = 0;
-    let element = this.last;
-    for (i; i < this.lenght() - index; i++) {
-      element = element.prev;
-    }
+    let element = this.first;
     const prev = element.prev;
     const next = element.next;
     if (prev) prev.next = next;
     if (next) next.prev = prev;
-    if (index === this.lenght()) {
-
+    if (index === this.length) {
       this.last = this.last.prev;
     }
     if (index === 1) this.first = this.first.next;
+    this.length = this.length - 1;
+
+    return element;
+  }
+
+  shift() {
+     if (this.first !== this.last) {
+      const next = this.first.next;
+      this.first = this.first.next;
+      next.prev = null;
+      this.length = this.length - 1;
+    } else {
+      this.first = null;
+      this.last = null;
+    }
+  }
+
+  unshift(data) {
+     const element = new Node(this, data);
+    if (this.first) {
+      const next = this.first;
+      element.next = next;
+      this.first = element;
+      next.prev = element;
+    } else {
+      this.last = element;
+      this.first = element;
+    }
+    this.length = this.length + 1;
     return element;
   }
 
@@ -131,6 +132,7 @@ class List {
     }
     return newlist;
   }
+
   tostring() {
     const next = '  ↓', prev = '↑  ';
     let tab = '';
@@ -142,6 +144,28 @@ class List {
   }
 }
 
+class CycleList extends List{
+  
+  do(){
+    this.last.next = this.first;
+    this.first.prev = this.last;
+    return this.last;
+  }
+  lengthO() {
+    let rabbit = this.first;
+    let turtle = this.first;
+    let len = 0;
+    do {
+      rabbit = rabbit.next;
+      rabbit = rabbit.next;
+      turtle = turtle.next;
+      len++;      
+    } while(rabbit !== turtle);
+    return len;
+  }
+};
+
+
 // Usage
 
 const obj1 = { name: 'first' };
@@ -149,17 +173,30 @@ const obj2 = { name: 'second' };
 const obj3 = { name: 'third' };
 const obj4 = { name: 'forth' };
 
+const cyclelist = new CycleList();
 const list = new List();
-list.push(obj1);
-list.push(obj2);
-list.push(obj3);
-list.insert(4, obj4);
-list.pop();
-list.delete(1);
-const list1 = list.clone();
-console.dir(list1, { depth: 10 });
 
 
-// for (const element of list) {
+// list.push(obj1);
+// list.push(obj2);
+// list.push(obj3);
+// list.insert(3, obj3);
+// list.pop();
+// list.delete(1);
+// list.unshift(obj3);
+// list.unshift(obj2);
+// list.unshift(obj1);
+// list.shift()
+// const list1 = list.clone();
+// console.dir(list, { depth: 10 });
+
+
+cyclelist.push(obj1);
+cyclelist.push(obj2);
+cyclelist.push(obj3);
+
+// cyclelist.do();
+console.dir(cyclelist, {depth: 4});
+// for (const element of cyclelist) {
 //   console.log(element);
 // }
